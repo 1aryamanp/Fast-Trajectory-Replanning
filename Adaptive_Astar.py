@@ -6,6 +6,7 @@ import seaborn as sns
 import copy
 import numpy as np
 import Maze_Generator as mazeGen
+from matplotlib.colors import ListedColormap
 
 def get_path(var, start, goal):  # returns the intermediate paths for each Astar call
     list = []
@@ -33,9 +34,12 @@ def final_path_visualizer(maze, var, start, goal):  # prints the final path from
     maze4[goal] = 4
     maze4[start] = 3
 
-    plt.figure(4, figsize=(5, 5))
-    ax = sns.heatmap(maze4, linewidths=0.1, linecolor="gray", square=True, cbar=False, xticklabels=False,
-                     yticklabels=False, cmap=sns.diverging_palette(10, 220, n=200), vmin=0, vmax=4)
+    cmap = ListedColormap(['black', 'white', 'yellow', 'green', 'red'])
+
+    plt.figure(figsize=(5, 5))
+    plt.title('Maze Visualization')
+    sns.heatmap(maze4, linewidths=0.1, linecolor="gray", square=True, cbar=False, xticklabels=False,
+                yticklabels=False, cmap=cmap, vmin=0, vmax=4)  
     plt.show()
 
 

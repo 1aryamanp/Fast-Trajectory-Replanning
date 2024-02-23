@@ -2,6 +2,7 @@ import random as RandomValue
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from matplotlib.colors import ListedColormap
 
 def create_maze(dim, p, visualize):
     numCol = dim
@@ -25,7 +26,9 @@ def create_maze(dim, p, visualize):
 
 def visualise_maze(maze):  
 
-    plt.figure(1, figsize=(5, 5))
-    ax = sns.heatmap(maze, linewidths=0.1, linecolor="gray", square=True, cbar=False, xticklabels=False,
-                     yticklabels=False, cmap=sns.diverging_palette(10, 220, n=200))
+    cmap = ListedColormap(['black', 'white', 'green', 'red'])
+    
+    plt.figure(figsize=(5, 5))
+    sns.heatmap(maze, linewidths=0.1, linecolor="gray", square=True, cbar=False, xticklabels=False,
+                yticklabels=False, cmap=cmap, vmin=0, vmax=3)  # Use the custom colormap here
     plt.show()
