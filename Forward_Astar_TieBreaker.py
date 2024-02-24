@@ -1,3 +1,4 @@
+'''
 import Maze_Generator as mazeGen
 import Repeated_Forward_Astar as fAstar
 import numpy as np
@@ -32,3 +33,4 @@ print("Average expanded cells ", np.mean(cells_g))
 print("Standard Deviation of expanded cells", np.std(cells_g))
 print("Average runtime ", np.mean(times_g))
 print("Total runtime ", np.sum(times_g))
+'''
