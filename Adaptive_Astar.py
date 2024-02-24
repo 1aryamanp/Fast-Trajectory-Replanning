@@ -120,9 +120,9 @@ def astar_adaptive(mazeOriginal, dim, do_visual):
     f = np.zeros((dim, dim))
     size = dim - 1
 
-    for i in range(0, dim):
-        for j in range(0, dim):
-            h[i][j] = (abs(size - i) + abs(size - j))
+    for i in range(dim):
+        for j in range(dim):
+            h[i][j] = (abs(size - i) + abs(size - j))  # Heuristic function based on Manhattan distance
 
     open_list = HeapPriorityQueue()
     start = (0, 0)
@@ -134,19 +134,19 @@ def astar_adaptive(mazeOriginal, dim, do_visual):
         g = np.zeros((dim, dim))
         f = np.zeros((dim, dim))
         c, d = agent
-        g[c][d] = 0
-        counter = counter + 1
-        search[c][d] = counter
-        g[p][q] = 1000
+        g[c][d] = 0  # Resetting g values
+        counter += 1
+        search[c][d] = counter  # Marking the cell as visited
+        g[p][q] = 1000  # Setting goal g value high initially
         search[p][q] = counter
         open_list.remove_all()
         closed_list = []
-        f[c][d] = g[c][d] + h[c][d]
+        f[c][d] = g[c][d] + h[c][d]  # Calculating f value for the start cell
         open_list.add(f[c][d], (c, d))
         var = compute_path_forward(search, open_list, closed_list, g, f, h, mazer, counter, size)
         if open_list.is_empty():
             if do_visual:
-                print("No path found")
+                print("Pathfinding failed: No path exists from start to goal.")
                 path_exists = False
             break
         nodes = get_path(var, agent, goal)
@@ -158,47 +158,40 @@ def astar_adaptive(mazeOriginal, dim, do_visual):
             actions, blocks = all_actions((x, y), maze, dim)
             for k in blocks:
                 a, b = k
-                mazer[a][b] = 0
+                mazer[a][b] = 0  # Updating the maze based on the found path
                 if (a, b) in nodes:
                     found = True
             if found:
                 break
             my_visitors.append((x, y))
             
+            # Updating heuristic values based on the path found
             for j in my_visitors:
-                a,b = j
+                a, b = j
                 h[a][b] = abs(g[p][q] - g[a][b])
             
         agent = (x, y)
-    
+
     end_time = time.time()
     total_time = end_time - start_time
 
     if do_visual:
-        print("Counter for adaptive Astar ", counter)
-        print("Expanded cells for forward Astar ", len(my_visitors))
+        print(f"Counter for adaptive A*: {counter}")
+        print(f"Number of cells expanded: {len(my_visitors)}")
         final_path_visualizer(mazer, my_visitors, start, goal)
-        print("Total elapsed ", total_time, "seconds")
+        print(f"Total computation time: {total_time:.2f} seconds")
     open_list.remove_all()
 
-    if (path_exists):
+    if path_exists:
         return len(my_visitors), total_time
-
 
 if __name__ == "__main__":
     mazeDim = 51
-    p = .3
+    p = 0.3
     OG_maze = mazeGen.create_maze(mazeDim, p, True)
-    astar_adaptive(OG_maze, mazeDim, True)
-
-    # cells = [] 
-    # times = []
-    # for i in range(0, 5):
-    #     OG_maze = mazeGen.create_maze(mazeDim, p)
-    #     expanded_cells, time_elapsed = astar_adaptive(OG_maze, mazeDim, False)
-    #     cells.append(expanded_cells)
-    #     times.append(time_elapsed)
-    # print("Average expanded cells ", np.mean(cells))
-    # print("Standard Deviation of expanded cells", np.std(cells))
-    # print("Average runtime ", np.mean(times))
-    # print("Total runtime ", np.sum(times))
+    result = astar_adaptive(OG_maze, mazeDim, True)
+    if result:
+        expanded_cells, total_time = result
+        print(f"Path found! Cells expanded: {expanded_cells}, Time taken: {total_time:.2f} seconds.")
+    else:
+        print("Failed to find a path.")

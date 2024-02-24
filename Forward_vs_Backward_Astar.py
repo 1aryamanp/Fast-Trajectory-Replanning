@@ -1,3 +1,4 @@
+'''
 import Maze_Generator as mazeGen
 import Repeated_Forward_Astar as fAstar
 import Repeated_Backward_Astar as bAstar
@@ -33,13 +34,4 @@ print("Average expanded cells ", np.mean(cells_b))
 print("Standard Deviation of expanded cells", np.std(cells_b))
 print("Average runtime ", np.mean(times_b))
 print("Total runtime ", np.sum(times_b))
-
-# OG_maze = mazeGen.create_maze(mazeDim, p, False)
-
-# print("Forwards A star")
-# fAstar.astar_forward(OG_maze, mazeDim, fAstar.tie_breaker_greater, True)
-
-# print("\n--------------------------------------------\n")
-
-# print("Backwards A star")
-# bAstar.astar_backward(OG_maze, mazeDim, True)
+'''

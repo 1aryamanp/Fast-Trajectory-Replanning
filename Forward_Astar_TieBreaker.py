@@ -32,14 +32,3 @@ print("Average expanded cells ", np.mean(cells_g))
 print("Standard Deviation of expanded cells", np.std(cells_g))
 print("Average runtime ", np.mean(times_g))
 print("Total runtime ", np.sum(times_g))
-
-
-# OG_maze = mazeGen.create_maze(mazeDim, p, False)
-
-# print("Smaller tie breaker")
-# fAstar.astar_forward(OG_maze, mazeDim, fAstar.tie_greaker_smaller, True)
-
-# print("\n--------------------------------------------\n")
-
-# print("Greater tie breaker")
-# fAstar.astar_forward(OG_maze, mazeDim, fAstar.tie_greaker_greate, True)

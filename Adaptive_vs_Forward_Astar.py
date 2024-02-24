@@ -1,3 +1,4 @@
+'''
 import Maze_Generator as mazeGen
 import Repeated_Forward_Astar as fAstar
 import Adaptive_Astar as aAstar
@@ -41,3 +42,4 @@ print("Total runtime ", np.sum(times_a))
 
 # print("Adaptive A star")
 # aAstar.astar_adaptive(maze, dim, True)
+'''

@@ -38,6 +38,7 @@ def final_path_visualizer(maze, var, start, goal):  # prints the final path from
     cmap = ListedColormap(['black', 'white', 'yellow', 'green', 'red'])
     
     plt.figure(figsize=(5, 5))
+    plt.title('Maze Visualization')
     sns.heatmap(maze4, linewidths=0.1, linecolor="gray", square=True, cbar=False, xticklabels=False,
                 yticklabels=False, cmap=cmap, vmin=0, vmax=4)
     plt.show()
@@ -108,91 +109,96 @@ def compute_path_backward(search, open_list, closed_list, g, f, h, maze, counter
 
 
 def astar_backward(mazeOriginal, dim, do_visual):
-    start_time = time.time()
-    maze = copy.deepcopy(mazeOriginal)
-    mazer = np.ones((dim, dim))
-    counter = 0
-    search = np.zeros((dim, dim))
-    my_visitors = []
-    path_exists = True
-    h = np.zeros((dim, dim))
-    g = np.zeros((dim, dim))
-    f = np.zeros((dim, dim))
-    size = dim - 1
-    
-    for i in range(0, dim):
-        for j in range(0, dim):
-            h[i][j] = (abs(0 - i) + abs(0 - j))
+    start_time = time.time()  # Start timing the execution
+    maze = copy.deepcopy(mazeOriginal)  # Create a deep copy to preserve the original maze
+    mazer = np.ones((dim, dim))  # Initialize a maze for visualization
+    counter = 0  # Initialize a step counter
+    search = np.zeros((dim, dim))  # Track visited cells
+    my_visitors = []  # Track the cells visited during the search
+    path_exists = True  # Flag to indicate if a path exists
+    h = np.zeros((dim, dim))  # Heuristic function array
+    g = np.zeros((dim, dim))  # Cost to reach current cell
+    f = np.zeros((dim, dim))  # Estimated total cost (f = g + h)
+    size = dim - 1  # Adjust for zero-based indexing
 
-    open_list = HeapPriorityQueue()
-    start = (size, size)
-    agent = start
-    goal = (0, 0)
-    p, q = goal
+    # Initialize heuristic values based on Manhattan distance
+    for i in range(dim):
+        for j in range(dim):
+            h[i][j] = abs(0 - i) + abs(0 - j)
+
+    open_list = HeapPriorityQueue()  # Initialize priority queue
+    start = (size, size)  # Set starting point
+    agent = start  # Current position of the agent
+    goal = (0, 0)  # Set goal position
     
+    # Begin search loop
     while agent != goal:
-        g = np.zeros((dim, dim))
-        f = np.zeros((dim, dim))
-        c, d = agent
-        g[c][d] = 0
-        counter = counter + 1
-        search[c][d] = counter
-        g[p][q] = 1000
-        search[p][q] = counter
-        open_list.remove_all()
-        closed_list = []
-        f[c][d] = g[c][d] + h[c][d]
-        open_list.add(f[c][d], (c, d))
+        g = np.zeros((dim, dim))  # Reset cost array
+        f = np.zeros((dim, dim))  # Reset total cost array
+        c, d = agent  # Current agent position
+        g[c][d] = 0  # Set start cell cost to 0
+        counter += 1  # Increment step counter
+        search[c][d] = counter  # Mark current cell as visited
+        g[goal] = 1000  # Set high initial goal cost
+        search[goal] = counter  # Mark goal as visited for this search
+        open_list.remove_all()  # Clear priority queue
+        closed_list = []  # Initialize closed list
+        
+        f[c][d] = g[c][d] + h[c][d]  # Calculate f value for start cell
+        open_list.add(f[c][d], (c, d))  # Add start cell to open list
         var = compute_path_backward(search, open_list, closed_list, g, f, h, mazer, counter, dim)
+        
+        # Check if a path was found
         if open_list.is_empty():
             if do_visual:
-                print("No path found")
+                print("Pathfinding failed: No path exists from start to goal.")
                 path_exists = False
             break
-        nodes = get_path(var, agent, goal)
         
-        for i in range(len(nodes) - 1, -1, -1):
+        nodes = get_path(var, agent, goal)  # Retrieve path
+
+        # Update maze based on found path
+        for i in reversed(range(len(nodes))):
             x, y = nodes[i]
             
             found = False
             actions, blocks = all_actions((x, y), maze, dim)
             for k in blocks:
                 a, b = k
-                mazer[a][b] = 0
+                mazer[a][b] = 0  # Block cell in visualization maze
                 if (a, b) in nodes:
-                    found = True
+                    found = True  # Break if a block interrupts the path
             if found:
                 break
-            my_visitors.append((x, y))
-        agent = (x, y)
+            my_visitors.append((x, y))  # Add cell to visited list
+        
+        agent = (x, y)  # Update agent position
 
-    end_time = time.time()
-    total_time = end_time - start_time
+    end_time = time.time()  # End timing
+    total_time = end_time - start_time  # Calculate total execution time
 
     if do_visual:
-        print("Counter for backward Astar ", counter)
-        print("Expanded cells for forward Astar ", len(my_visitors))
-        final_path_visualizer(mazer, my_visitors, start, goal)
-        print("Total elapsed  ", total_time, " seconds")
-    open_list.remove_all()
+        # Provide a summary of the search process
+        print(f"Counter for backward A*: {counter}")
+        print(f"Number of cells expanded: {len(my_visitors)}")
+        final_path_visualizer(mazer, my_visitors, start, goal)  # Visualize final path
+        print(f"Total computation time: {total_time:.2f} seconds")
 
-    if (path_exists):
-        return len(my_visitors), total_time
+    open_list.remove_all()  # Clear priority queue
+
+    if path_exists:
+        return len(my_visitors), total_time  # Return path length and total time if path exists
 
 if __name__ == "__main__":
     mazeDim = 10
-    p = .3
-    OG_maze = mazeGen.create_maze(mazeDim, p, False)
-    astar_backward(OG_maze, mazeDim, True)
+    p = 0.3
+    OG_maze = mazeGen.create_maze(mazeDim, p, True)  # Generate maze
+    result = astar_backward(OG_maze, mazeDim, True)  # Run A* backward search
+    
+    # Print final result
+    if result:
+        expanded_cells, total_time = result
+        print(f"Path found! Cells expanded: {expanded_cells}, Time taken: {total_time:.2f} seconds.")
+    else:
+        print("Failed to find a path.")
 
-    # cells = [] 
-    # times = []
-    # for i in range(0, 5):
-    #     OG_maze = mazeGen.create_maze(mazeDim, p, False)
-    #     expanded_cells, time_elapsed = astar_adaptive(OG_maze, mazeDim, False)
-    #     cells.append(expanded_cells)
-    #     times.append(time_elapsed)
-    # print("Average expanded cells ", np.mean(cells))
-    # print("Standard Deviation of expanded cells", np.std(cells))
-    # print("Average runtime ", np.mean(times))
-    # print("Total runtime ", np.sum(times))

@@ -10,20 +10,20 @@ p = .3
 OG_maze = mazeGen.create_maze(mazeDim, p, True)
 
 
-print("Forward A star, smaller tie breaker")
+print("Maze Visulization of Forward A star, smaller tie breaker")
 fAstar.astar_forward(OG_maze, mazeDim, fAstar.tie_breaker_smaller, True)
 
 print("--------------------------------------------")
 
-print("Forward A star, greater tie breaker")
+print("Maze Visulization of Forward A star, greater tie breaker")
 fAstar.astar_forward(OG_maze, mazeDim, fAstar.tie_breaker_greater, True)
 
 print("--------------------------------------------")
 
-print("Backward A star")
+print("Maze Visulization of Backward A star")
 bAstar.astar_backward(OG_maze, mazeDim, True)
 
 print("--------------------------------------------")
 
-print("Adaptive A star")
+print("Maze Visulization of Adaptive A star")
 aAstar.astar_adaptive(OG_maze, mazeDim, True)
