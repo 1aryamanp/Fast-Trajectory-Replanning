@@ -2,7 +2,7 @@ import Maze_Generator as mazeGen
 import Repeated_Forward_Astar as fAstar
 import numpy as np
 
-mazeDim = 51
+mazeDim = 10
 p = .3
 
 cells_s = [] 

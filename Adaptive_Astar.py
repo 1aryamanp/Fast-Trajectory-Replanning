@@ -186,7 +186,7 @@ def astar_adaptive(mazeOriginal, dim, do_visual):
         return len(my_visitors), total_time
 
 if __name__ == "__main__":
-    mazeDim = 51
+    mazeDim = 10
     p = 0.3
     OG_maze = mazeGen.create_maze(mazeDim, p, True)
     result = astar_adaptive(OG_maze, mazeDim, True)

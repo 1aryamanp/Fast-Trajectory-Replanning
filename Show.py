@@ -4,7 +4,7 @@ import Repeated_Backward_Astar as bAstar
 import Adaptive_Astar as aAstar
 import numpy as np
 
-mazeDim = 51
+mazeDim = 10
 p = .3
 
 OG_maze = mazeGen.create_maze(mazeDim, p, True)

@@ -3,7 +3,7 @@ import Repeated_Forward_Astar as fAstar
 import Adaptive_Astar as aAstar
 import numpy as np
 
-mazeDim = 51
+mazeDim = 10
 p = .3
 
 cells_f = [] 
